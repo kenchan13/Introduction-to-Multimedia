@@ -1,4 +1,4 @@
-clear all
+clear all;
 img1 = './data/cat1.png';
 n = 4; % Input n
 
@@ -32,17 +32,17 @@ rgbImage = imread(img1);
 % set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 % drawnow;
 
-[rows, columns, numberOfColorBands] = size(rgbImage);
+[height, width, numberOfColorBands] = size(rgbImage);
 
 blockSizeR = 8; % Rows in block.
 blockSizeC = 8; % Columns in block.
 
-wholeBlockRows = floor(rows / blockSizeR);
-blockVectorR = [blockSizeR * ones(1, wholeBlockRows), rem(rows, blockSizeR)];
+wholeBlockRows = floor(height / blockSizeR);
+blockVectorR = [blockSizeR * ones(1, wholeBlockRows), rem(height, blockSizeR)];
 
-% Figure out the size of each block in columns.
-wholeBlockCols = floor(columns / blockSizeC);
-blockVectorC = [blockSizeC * ones(1, wholeBlockCols), rem(columns, blockSizeC)];
+% Figure out the size of each block in width.
+wholeBlockCols = floor(width / blockSizeC);
+blockVectorC = [blockSizeC * ones(1, wholeBlockCols), rem(width, blockSizeC)];
 
 % Create the cell array, ca. 
 % Each cell (except for the remainder cells at the end of the image)
@@ -100,13 +100,15 @@ for r = 1 : 48
                 end
             end
             
-            % Check the result
-            % Round up all number to avoid tiny differences
+            % Check results
+            % Ignore tiny differences with rounding up all numbers
             if round(T(1:n, 1:n), 3) ~= round(testcase(1:n, 1:n), 3)
                 fprintf("block(%d,%d), color=%d: Error\n", r, c, rgb);
             else
                 fprintf("block(%d,%d), color=%d: Great!\n", r, c, rgb);
             end
+            
+            
             
         end
         
@@ -130,10 +132,10 @@ for r = 1 : numPlotsR
         % just for tutorial purposes.
         rgbBlock = ca{r,c};
         imshow(rgbBlock); % Could call imshow(ca{r,c}) if you wanted to.
-        [rowsB columnsB numberOfColorBandsB] = size(rgbBlock);
+        [heightB widthB numberOfColorBandsB] = size(rgbBlock);
         % Make the caption the block number.
-        caption = sprintf('Block #%d of %d\n%d rows by %d columns', ...
-            plotIndex, numPlotsR*numPlotsC, rowsB, columnsB);
+        caption = sprintf('Block #%d of %d\n%d height by %d width', ...
+            plotIndex, numPlotsR*numPlotsC, heightB, widthB);
         % title(caption);
         drawnow;
         % Increment the subplot to the next location.
