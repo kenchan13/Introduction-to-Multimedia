@@ -20,11 +20,13 @@ end
 blockSizeHeight = 8; 
 blockSizeWidth = 8;
 
-wholeBlockRows = floor(ImgHeight / blockSizeHeight);
-blockVectorR = [blockSizeHeight * ones(1, wholeBlockRows), rem(ImgHeight, blockSizeHeight)];
+% Figure out the hight of each block.
+NumOfBlockRows = floor(ImgHeight / blockSizeHeight);
+blockVectorR = [blockSizeHeight * ones(1, NumOfBlockRows), rem(ImgHeight, blockSizeHeight)];
 
-wholeBlockCols = floor(ImgWidth / blockSizeWidth);
-blockVectorC = [blockSizeWidth * ones(1, wholeBlockCols), rem(ImgWidth, blockSizeWidth)];
+% Figure out the width of each block.
+NumOfBlockCols = floor(ImgWidth / blockSizeWidth);
+blockVectorC = [blockSizeWidth * ones(1, NumOfBlockCols), rem(ImgWidth, blockSizeWidth)];
 
 % Divide YIQImage into n*n pixel blocks
 YIQBlocks = mat2cell(YIQImage, blockVectorR, blockVectorC, numberOfColorBands);
