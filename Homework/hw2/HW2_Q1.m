@@ -20,7 +20,7 @@ LineWidth = 1.5;
 %%% Plot example : plot the input audio
 % The provided function "make_spectrum" generates frequency
 % and magnitude. Use the following example to plot the spectrum.
-[frequency, magnitude] = makeSpectrum(y_input, fs);
+[frequency, magnitude] = make_spectrum(y_input, fs);
 plot(frequency, magnitude, 'LineWidth', LineWidth); 
 title('Input', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
