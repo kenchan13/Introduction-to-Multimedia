@@ -1,9 +1,10 @@
+clc;
 clear all;
-img1 = './data/cat1.png';
+img1 = './data/cat3_LR.png';
 rgbImage = imread(img1);
 
 [ImgHeight, ImgWidth, Layers] = size(rgbImage);
-n = 2;
+n = 8;
 
 % Set YIQImage into zeros
 YIQImage = zeros(ImgHeight, ImgWidth, 3);
@@ -61,11 +62,11 @@ U = reshape(U, [size, size])';
 % DCT process
 % S is the YIQBlock source (1 block)
 % TBlocks is sets of amplitudes of frequency components for Image
-% NumOfBlockRows
+
 TBlocks = mat2cell(zeros(ImgHeight, ImgWidth, Layers), blockVectorR, blockVectorC, Layers);
 
 for x = 1: NumOfBlockRows
-    for y = 1: NumOfBlockCols
+    for y = 1: NumOfBlockRows
         for z = 1: Layers
             S = YIQBlocks{x, y}(:,:,z); % For each color
             tempT = zeros(size);
@@ -79,7 +80,82 @@ for x = 1: NumOfBlockRows
             tempT = tempT(1:n, 1:n);
             tempT(blockSizeHeight, blockSizeHeight) = 0;
             TBlocks{x, y}(:,:,z) = tempT;
+            
+            % Check result
+            %{
+            if round(dct2(YIQBlocks{x,y}(:,:,z)), 4) ~= round(tempT(:, :), 4)
+                fprintf("Error!: x=%d y=%d, z=%d\n", x, y,z), end
+            %}
         end
     end
 end
 
+% DCT inverse
+for x = 1: NumOfBlockRows
+    for y = 1: NumOfBlockCols
+        for z = 1: Layers
+            tempT = TBlocks{x, y}(:,:,z);
+            YIQTemp = zeros(size);
+            for k = 1: size
+                for l = 1: size
+                    YIQTemp(k,l) = sum(U{k,l}.*tempT, 'all');
+                end
+            end
+            YIQBlocks{x,y}(:,:,z) = YIQTemp;
+            % Check result
+            %{
+            if round(dct2(TBlocks{x,y}(:,:,z)), 4) ~= round(YIQTemp(:, :), 4)
+                fprintf("Error!: x=%d y=%d, z=%d\n", x, y,z), end
+            %}
+        end
+    end
+end
+
+% Convert YIQBlocks back to YIQImageFinal
+YIQImageFinal = cell2mat(YIQBlocks);
+
+% YIQ -> RGB
+rgbImageFinal = zeros(ImgHeight, ImgWidth, 3);
+for h = 1 : ImgHeight
+    for w = 1 : ImgWidth
+        YIQTemp = [YIQImageFinal(h, w, 1); YIQImageFinal(h, w, 2); YIQImageFinal(h, w, 3)];
+        RGBtemp = num2cell([YIQTable\YIQTemp]);
+        [rgbImageFinal(h, w, 1) ,rgbImageFinal(h, w, 2), rgbImageFinal(h, w, 3)] = deal(RGBtemp{:});
+    end
+end
+
+rgbImageInt = uint8(rgbImageFinal);
+imshow(round(rgbImageInt));
+
+fprintf("Finish\n")
+
+
+
+
+
+
+%{
+A = imread(img1);
+% [ImgHeight, ImgWidth, Layers] = size(rgbImage);
+% Set YIQImage into zeros
+B = zeros(ImgHeight, ImgWidth, 3);
+
+% Convert RGBImage into YIQImage
+for h = 1 : ImgHeight
+    for w = 1 : ImgWidth
+        Atemp = [A(h, w, 1); A(h, w, 2); A(h, w, 3)];
+        Btemp = num2cell([YIQTable*double(Atemp)]);
+        [B(h, w, 1) ,B(h, w, 2), B(h, w, 3)] = deal(Btemp{:});
+    end
+end
+
+% Convert YIQImage into RGBImage
+for h = 1 : ImgHeight
+    for w = 1 : ImgWidth
+        Btemp = [B(h, w, 1); B(h, w, 2); B(h, w, 3)];
+        Atemp = num2cell([YIQTable\double(Btemp)]);
+        [A(h, w, 1) ,A(h, w, 2), A(h, w, 3)] = deal(Atemp{:});
+    end
+end
+imshow(A);
+%}
