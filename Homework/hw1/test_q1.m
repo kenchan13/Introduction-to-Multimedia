@@ -1,6 +1,6 @@
 clear all;
 clc;
-n = 4; % Input n
+n = 2; % Input n
 
 % Size of rgbBlock
 size = 4;
@@ -39,4 +39,14 @@ for k = 1 : size
     end
 end
 
+% We conly need top-left n*n data
+% Cut T and expand T with 0
+T = T(1:n, 1:n);
+T(size, size) = 0;
 
+% DCT inverse
+for k = 1: size
+    for l = 1: size
+        S(k,l) = sum(U{k,l}.*T, 'all');
+    end
+end
