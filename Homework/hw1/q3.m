@@ -1,12 +1,12 @@
 clear all;
 img1 = './data/cat3_LR.png';
-rgbImage = imread(img1);
-[ImgHeight, ImgWidth, Layer] = size(rgbImage);
+originImg = imread(img1);
+[ImgHeight, ImgWidth, Layer] = size(originImg);
 
-n = 3;
+n = 7;
 K = fspecial('gaussian', [n n], 1);
 midK = (n-1)/2;
-originImg = rgbImage;
+rgbImage = double(originImg);
 
 for h = 1: ImgHeight
    for w = 1: ImgWidth
@@ -21,9 +21,10 @@ for h = 1: ImgHeight
                end
            end
            rgbImage(h, w, l) = sum;
-           
        end
    end
 end
 
-imshow([originImg, rgbImage]);
+for l = 1: Layer
+    testResult(:,:,l) = conv2(double(originImg(:,:,l)), K, 'same');
+end
