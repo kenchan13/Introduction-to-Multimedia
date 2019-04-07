@@ -2,25 +2,6 @@ clear all;
 img1 = './data/cat1.png';
 n = 4; % Input n
 
-% Read in a standard MATLAB color demo image.
-%{
-folder = fullfile(matlabroot, '\toolbox\images\imdemos');
-baseFileName = 'peppers.png';
-% Get the full filename, with path prepended.
-img1 = fullfile(folder, baseFileName);
-if ~exist(img1, 'file')
-    % Didn't find it there.  Check the search path for it.
-    img1 = baseFileName; % No path this time.
-    if ~exist(img1, 'file')
-        % Still didn't find it.  Alert user.
-        errorMessage = sprintf('Error: %s does not exist.', img1);
-        uiwait(warndlg(errorMessage));
-        return;
-    end
-end
-%}
-
-
 % Read the image from disk.
 rgbImage = imread(img1);
 
@@ -28,7 +9,6 @@ rgbImage = imread(img1);
 % Display image full screen.
 % imshow(rgbImage);
 % Enlarge figure to full screen.
-
 % set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 % drawnow;
 
@@ -149,14 +129,4 @@ end
 subplot(4, 6, 1);
 imshow(rgbImage);
 title('Original Image');
-%}
-
-%{
-% Inform user of next stage where we process a gray scale image.
-promptMessage = sprintf('Now I will do the same for a gray scale image.');
-titleBarCaption = 'Continue?';
-button = questdlg(promptMessage, titleBarCaption, 'OK', 'Cancel', 'OK');
-if strcmpi(button, 'Cancel')
-    return;
-end
 %}
