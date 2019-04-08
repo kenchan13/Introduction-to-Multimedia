@@ -1,9 +1,9 @@
-% clear all;
-% img = './data/cat3_LR.png';
-% A = imread(img);
-% B = imnoise(A, 'salt & pepper', 0.02);
+clear all;
+img = './data/cat3_LR.png';
+A = imread(img);
+B = imnoise(A, 'salt & pepper', 0.02);
 
-function psnr_imple = func(A, B)
+% function psnr_imple = func(A, B)
 
 A = double(A);
 B = double(B);
@@ -19,4 +19,4 @@ else
     PSNR = 99;
 end
 
-psnr_imple = PSNR;
+% psnr_imple = mean(PSNR);

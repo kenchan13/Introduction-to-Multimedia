@@ -1,6 +1,6 @@
 clc;
 clear all;
-img1 = './data/cat3_LR.png';
+img1 = './data/cat2_gray.png';
 rgbImage = imread(img1);
 
 [ImgHeight, ImgWidth, Layers] = size(rgbImage);
@@ -11,12 +11,23 @@ YIQImage = zeros(ImgHeight, ImgWidth, 3);
 
 YIQTable = [.299 .587 .114; .596 -.275 -.321; .212 -.523 .311];
 % Convert RGBImage into YIQImage
-for h = 1 : ImgHeight
-    for w = 1 : ImgWidth
-        RGBtemp = [rgbImage(h, w, 1); rgbImage(h, w, 2); rgbImage(h, w, 3)];
-        YIQtemp = num2cell([YIQTable*double(RGBtemp)]);
-        [YIQImage(h, w, 1) ,YIQImage(h, w, 2), YIQImage(h, w, 3)] = deal(YIQtemp{:});
+if (Layers == 3)
+    for h = 1 : ImgHeight
+        for w = 1 : ImgWidth
+            RGBtemp = [rgbImage(h, w, 1); rgbImage(h, w, 2); rgbImage(h, w, 3)];
+            YIQtemp = num2cell([YIQTable*double(RGBtemp)]);
+            [YIQImage(h, w, 1) ,YIQImage(h, w, 2), YIQImage(h, w, 3)] = deal(YIQtemp{:});
+        end
     end
+else
+    for h = 1 : ImgHeight
+        for w = 1 : ImgWidth
+            RGBtemp = [rgbImage(h, w, 1); rgbImage(h, w, 1); rgbImage(h, w, 1)];
+            YIQtemp = num2cell([YIQTable*double(RGBtemp)]);
+            [YIQImage(h, w, 1) ,YIQImage(h, w, 2), YIQImage(h, w, 3)] = deal(YIQtemp{:});
+        end
+    end
+    Layers = 3;
 end
 
 blockSizeHeight = 8;
@@ -121,6 +132,14 @@ for h = 1 : ImgHeight
 end
 
 rgbImageInt = uint8(rgbImageFinal);
-imshow(round(rgbImageInt));
+if (img1 == './data/cat2_gray.png')
+    rgbImageInt = rgbImageInt(:,:,3);
+end
+fprintf("PSNR:%d\n", psnr(rgbImage, rgbImageInt), psnr_imple(rgbImage, rgbImageInt))
+filename = strsplit(img1, {'.','/'});
+filename = strcat(filename{1,3}, '_', 'DCT_YIQ' ,'_', int2str(n), '.jpg');
+imwrite(rgbImageInt, filename);
+
+% imshow(round(rgbImageInt));
 
 fprintf("Finish\n")

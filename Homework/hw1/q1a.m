@@ -4,7 +4,7 @@ img1 = './data/cat3_LR.png';
 rgbImage = imread(img1);
 
 [ImgHeight, ImgWidth, Layers] = size(rgbImage);
-n = 2;
+n = 8;
 
 blockSizeHeight = 8;
 blockSizeWidth = 8;
@@ -99,6 +99,12 @@ end
 rgbImageFinal = cell2mat(rgbBlocks);
 
 rgbImageInt = uint8(rgbImageFinal);
-imshow(round(rgbImageInt));
+% imshow(round(rgbImageInt));
+
+fprintf("PSNR:%d\n", psnr(rgbImage, rgbImageInt), psnr_imple(rgbImage, rgbImageInt))
+filename = strsplit(img1, {'.','/'});
+filename = strcat(filename{1,3}, '_', 'DCT' ,'_', int2str(n), '.jpg');
+% imwrite(rgbImageInt, filename);
+
 
 fprintf("Finish\n")
