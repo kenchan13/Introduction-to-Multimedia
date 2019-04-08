@@ -1,4 +1,8 @@
-f
+clc;
+clear all;
+img1 = './data/cat3_LR.png';
+rgbImage = imread(img1);
+
 [ImgHeight, ImgWidth, Layers] = size(rgbImage);
 n = 2;
 
@@ -48,7 +52,7 @@ RGBBlocks = YIQBlocks;
 for x = 1: NumOfBlockRows
     for y = 1: NumOfBlockCols
         for z = 1: Layers
-            YIQBlocks{x,y}(:,:,z) = idct2(YIQBlocks{x,y}(:,:,z));
+            YIQBlocks{x,y}(:,:,z) = idct2_imple(YIQBlocks{x,y}(:,:,z));
             RGBBlocks{x,y} = ntsc2rgb(YIQBlocks{x,y});
         end
     end
