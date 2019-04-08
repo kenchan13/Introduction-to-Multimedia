@@ -1,12 +1,4 @@
-clc;
-clear all;
-img1 = './data/cat3_LR.png';
-
-A = imread(img1);
-[ImgHeight, ImgWidth, Layers] = size(A);
-
-B = imnoise(A, 'salt & pepper', 0.08);
-
+function psnr_imple = func(A, B)
 A = double(A);
 B = double(B);
 
@@ -20,4 +12,4 @@ else
     PSNR = 99;
 end
 
-PSNR = mean(PSNR);
+psnr_imple = mean(PSNR);

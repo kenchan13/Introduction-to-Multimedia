@@ -1,8 +1,4 @@
-clc;
-clear all;
-img1 = './data/cat3_LR.png';
-rgbImage = imread(img1);
-
+f
 [ImgHeight, ImgWidth, Layers] = size(rgbImage);
 n = 2;
 
