@@ -101,28 +101,10 @@ for x = 1: NumOfBlockRows
                     sum = sum + tempT(i,j)*U{i,j};
                 end
             end
-            
-            
+            YIQBlocks{x,y}(:,:,z) = sum;
         end
     end
 end
-
-%{
-for x = 1: NumOfBlockRows
-    for y = 1: NumOfBlockCols
-        for z = 1: Layers
-            tempT = TBlocks{x, y}(:,:,z);
-            YIQTemp = zeros(size);
-            for k = 1: size
-                for l = 1: size
-                    YIQTemp(k,l) = sum(U{k,l}.*tempT, 'all');
-                end
-            end
-            YIQBlocks{x,y}(:,:,z) = YIQTemp;
-        end
-    end
-end
-%}
 
 
 % Convert YIQBlocks back to YIQImageFinal
