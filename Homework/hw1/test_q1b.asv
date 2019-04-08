@@ -7,9 +7,8 @@ rgbImage = imread(img1);
 n = 2;
 
 yiqImage = rgb2ntsc(rgbImage);
-rgbImage2 = ntsc2rgb(yiqImage);
-
-
+rgb
+%{
 YIQImage = rgb2ntsc(rgbImage);
 
 blockSizeHeight = 8;
@@ -52,7 +51,7 @@ RGBBlocks = YIQBlocks;
 for x = 1: NumOfBlockRows
     for y = 1: NumOfBlockCols
         for z = 1: Layers
-            YIQBlocks{x,y}(:,:,z) = idct2(YIQBlocks{x,y}(:,:,z));
+            YIQBlocks{x,y}(:,:,z) = dct2(YIQBlocks{x,y}(:,:,z));
             RGBBlocks{x,y} = ntsc2rgb(YIQBlocks{x,y});
         end
     end
@@ -61,8 +60,9 @@ end
 % Convert YIQBlocks back to YIQImageFinal
 RGBFinal = cell2mat(RGBBlocks);
 
-imshow(RGBFinal);
-% [peaksnr, snr] = psnr(RGBFinal, rgbImage);
+% imshow(RGBFinal);
+[peaksnr, snr] = psnr(RGBFinal, rgbImage);
 
-% fprintf("PSNR: %d",snr);
+fprintf("PSNR: %d",snr);
 fprintf("Finish\n");
+%}

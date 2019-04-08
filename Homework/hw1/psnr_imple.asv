@@ -1,0 +1,20 @@
+clc;
+clear all;
+img1 = './data/cat3_LR.png';
+
+
+A = imread(img1);
+[ImgHeight, ImgWidth, Layers] = size(A);
+
+B = imnoise(A, 'salt & pepper', 0.08);
+
+% imshow(B);
+
+MSE = sum(sum((A-B).^2))/(ImgHeight*ImgWidth);
+
+PSNR = 10*log10(max(max(A))/MSE)
+
+% sum(PSNR)/3
+
+[peaksnr,snr] = psnr(B, A)
+
