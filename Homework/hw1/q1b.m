@@ -4,7 +4,7 @@ img1 = './data/cat3_LR.png';
 rgbImage = imread(img1);
 
 [ImgHeight, ImgWidth, Layers] = size(rgbImage);
-n = 8;
+n = 2;
 
 % Set YIQImage into zeros
 YIQImage = zeros(ImgHeight, ImgWidth, 3);
@@ -66,7 +66,7 @@ U = reshape(U, [size, size])';
 TBlocks = mat2cell(zeros(ImgHeight, ImgWidth, Layers), blockVectorR, blockVectorC, Layers);
 
 for x = 1: NumOfBlockRows
-    for y = 1: NumOfBlockRows
+    for y = 1: NumOfBlockCols
         for z = 1: Layers
             S = YIQBlocks{x, y}(:,:,z); % For each color
             tempT = zeros(size);
@@ -119,7 +119,7 @@ rgbImageFinal = zeros(ImgHeight, ImgWidth, 3);
 for h = 1 : ImgHeight
     for w = 1 : ImgWidth
         YIQTemp = [YIQImageFinal(h, w, 1); YIQImageFinal(h, w, 2); YIQImageFinal(h, w, 3)];
-        RGBtemp = num2cell([YIQTable\YIQTemp]);
+        RGBtemp = num2cell(YIQTable\YIQTemp);
         [rgbImageFinal(h, w, 1) ,rgbImageFinal(h, w, 2), rgbImageFinal(h, w, 3)] = deal(RGBtemp{:});
     end
 end
@@ -128,34 +128,3 @@ rgbImageInt = uint8(rgbImageFinal);
 imshow(round(rgbImageInt));
 
 fprintf("Finish\n")
-
-
-
-
-
-
-%{
-A = imread(img1);
-% [ImgHeight, ImgWidth, Layers] = size(rgbImage);
-% Set YIQImage into zeros
-B = zeros(ImgHeight, ImgWidth, 3);
-
-% Convert RGBImage into YIQImage
-for h = 1 : ImgHeight
-    for w = 1 : ImgWidth
-        Atemp = [A(h, w, 1); A(h, w, 2); A(h, w, 3)];
-        Btemp = num2cell([YIQTable*double(Atemp)]);
-        [B(h, w, 1) ,B(h, w, 2), B(h, w, 3)] = deal(Btemp{:});
-    end
-end
-
-% Convert YIQImage into RGBImage
-for h = 1 : ImgHeight
-    for w = 1 : ImgWidth
-        Btemp = [B(h, w, 1); B(h, w, 2); B(h, w, 3)];
-        Atemp = num2cell([YIQTable\double(Btemp)]);
-        [A(h, w, 1) ,A(h, w, 2), A(h, w, 3)] = deal(Atemp{:});
-    end
-end
-imshow(A);
-%}
