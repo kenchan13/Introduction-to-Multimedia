@@ -1,1 +1,0 @@
-Q1 Inform user of next stage where we process a gray scale image.

@@ -1,5 +1,5 @@
 clear all;
-img1 = './data/cat2_gray.png';
+img1 = './data/cat3_LR.png';
 rgbImage = imread(img1);
 
 [ImgHeight, ImgWidth] = size(rgbImage);
@@ -14,4 +14,9 @@ for h = 1 : ImgHeight
     end
 end
 
-imshow(rgbImage);
+% imshow(rgbImage);
+
+% fprintf("PSNR:%d\n", psnr(rgbImage, rgbImageInt), psnr_imple(rgbImage, rgbImageInt))
+filename = strsplit(img1, {'.','/'});
+filename = strcat(filename{1,3}, '_', 'q2a', '.jpg');
+imwrite(rgbImage, filename);
