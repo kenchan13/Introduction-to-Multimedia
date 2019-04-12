@@ -20,7 +20,7 @@ LineWidth = .5;
 %%% Plot example : plot the input audio
 % The provided function "make_spectrum" generates frequency
 % and magnitude. Use the following example to plot the spectrum.
-subplot(2,2,1:2);
+subplot(3,2,1:2);
 [frequency, magnitude] = makeSpectrum(y_input, fs);
 plot(frequency, magnitude, 'LineWidth', LineWidth); 
 title('Input', 'fontsize', titlefont);
@@ -33,8 +33,11 @@ xlim([0 400]);
 % [...] = myFilter(...);
 % N: Window size, assume N is odd
 % fcutoff: Cutoff frequency
-N = 51;
-fcutoff = 299;
+
+% N=999 fcutoff=310
+
+N = 999;
+fcutoff = 320;
 [outputSignal, outputFilter] = myFilter(y_input, fs, N, 'Blackman', 'low-pass', fcutoff);
 
 
@@ -42,15 +45,23 @@ gong = audioplayer(outputSignal, fs);
 play(gong);
 
 %%% Plot the shape of filters in Time domain
-subplot(2,2,3);
-% [outFrequency, outmagnitude] = makeSpectrum(outputSignal, fs);
+subplot(3,2,3);
 plot(outputFilter, 'LineWidth', LineWidth); 
 title('Input', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([0 300]);
+xlim([0 1200]);
 
 %%% Plot the spectrum of filters (Frequency Analysis)
-subplot(2,2,4);
+subplot(3,2,4);
+[outFilterFrequency, outFiltermagnitude] = makeSpectrum(outputFilter, fs);
+plot(outFilterFrequency,outFiltermagnitude, 'LineWidth', LineWidth); 
+title('Input', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize)
+xlim([0 1200]);
+
+
+%%% Plot the spectrum of outputSignal (Frequency Analysis)
+subplot(3,2,5:6);
 [outFrequency, outmagnitude] = makeSpectrum(outputSignal, fs);
 plot(outFrequency, outmagnitude, 'LineWidth', LineWidth); 
 title('Input', 'fontsize', titlefont);
