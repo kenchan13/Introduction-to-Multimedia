@@ -86,22 +86,17 @@ filterName = 'low-pass';
 % sound(lowpassOutput, fs);
 
 %% 6. Audio limiting(hard)
-limitingOutput = lowpassOutput;
-[row, col] = size(lowpassOutput);
-for R = 1: row
-    for C = 1:col
-        if limitingOutput(R, C) >= 0.05
-            limitingOutput(R, C) = 0.05;
-        elseif limitingOutput(R, C) < 0
-            limitingOutput(R, C) = 0;
-        end
+[row col] = size(lowpassOutput);
+for (R = 1: row)
+    for (C = 1:col)
+        if lowpassOutput(R, C) >= 0.3
+            lowpassOutput(R, C) = 0.3;
     end
 end
 
-% sound(limitingOutput, fs);
+
 
 %% 7. Normalization
-
 
 
 
