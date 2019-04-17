@@ -25,7 +25,7 @@ subplot(4,2,1:2);
 plot(frequency, magnitude, 'LineWidth', LineWidth); 
 title('Input', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([100 1600]);
+xlim([0 1600]);
 
 
 %% 2. Filtering 
@@ -35,9 +35,9 @@ xlim([100 1600]);
 % fcutoff: Cutoff frequency
 
 N = 1999;
-fcutoff1 = 350;
+fcutoff1 = 800;
 fcutoff2 = 0;
-filterName = 'low-pass';
+filterName = 'high-pass';
 [outputSignal, outputFilter] = myFilter(y_input, fs, N, 'Blackman', filterName, fcutoff1, fcutoff2);
 
 % gong = audioplayer(outputSignal, fs);
@@ -48,7 +48,7 @@ subplot(4,2,3);
 plot(outputFilter, 'LineWidth', LineWidth); 
 title('Shape of Filters', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([0 1200]);
+xlim([0 2000]);
 
 %%% Plot the spectrum of filters (Frequency Analysis)
 subplot(4,2,4);
@@ -56,7 +56,7 @@ subplot(4,2,4);
 plot(outFilterFrequency,outFiltermagnitude, 'LineWidth', LineWidth); 
 title('Spectrum of Filters', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([0 1200]);
+xlim([0 2000]);
 
 %% 3. Save the filtered audio (audiowrite)
 % Name the file 'FilterName_para1_para2.wav'
@@ -70,44 +70,57 @@ audiowrite( strcat(filterName,'_',para1,'_',para2,'.wav'), outputSignal, fs);
 subplot(4,2,5:6);
 [outFrequency, outmagnitude] = makeSpectrum(outputSignal, fs);
 plot(outFrequency, outmagnitude, 'LineWidth', LineWidth); 
-title('Output', 'fontsize', titlefont);
+title('Spectrum of Filtered Signals', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([100 1600]);
+xlim([0 1600]);
 
 %% 4, Reduce the sample rate of the three separated songs to 2kHz.
 [P, Q] = rat(2000/fs);
-outputSignal2 = resample(outputSignal, P, Q);
+outputSignal2000 = resample(outputSignal, P, Q);
 
-% gong = audioplayer(outputSignal2, 2000);
+% gong = audioplayer(outputSignal2000, 2000);
 % play(gong);
 
 subplot(4,2,7:8);
-[outFrequency, outmagnitude] = makeSpectrum(outputSignal2, fs);
+[outFrequency, outmagnitude] = makeSpectrum(outputSignal2000, 2000);
 plot(outFrequency, outmagnitude, 'LineWidth', LineWidth); 
-title('Output', 'fontsize', titlefont);
+title('Output with 2kHz', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([0 25000]);
+xlim([0 1600]);
 
 %% 4. Save the files after changing the sampling rate
-
-
+audiowrite( strcat(filterName,'_',para1,'_',para2,'_2kHz.wav'), outputSignal2000, double(2000));
 
 %% 5. one-fold echo and multiple-fold echo (slide #69
+% Use the files before reducing sampling rates
 
 % one-fold echo
-ak = [1,zeros(1,3199),0.8];
-bk = [1];
-oneEcho = conv(outputSignal2, ak, 'same') - conv(outputSignal2, bk, 'same');
+[row, col] = size(outputSignal);
+oneEcho = zeros(row, 1);
+for n = 1: row
+    if (n-3200 > 1)
+        oneEcho(n, 1) = outputSignal(n, 1) + 0.8*outputSignal(n-3200, 1);
+    end
+end
+
+% gong = audioplayer(oneEcho, fs);
+% play(gong);
 
 % multiple-fold echo
-ak = [1];
-bk = [1, zeros(1,3199), -0.8];
-multiEcho = conv(outputSignal2, ak, 'same') - conv(outputSignal2, bk, 'same');
+multiEcho = zeros(row, 1);
+for n = 1: row
+    if (n-3200 > 1)
+        multiEcho(n, 1) = outputSignal(n, 1) + 0.8*multiEcho(n-3200, 1);
+    end
+end
 
-gong = audioplayer(multiEcho, 2000);
-play(gong);
+% gong = audioplayer(multiEcho, fs);
+% play(gong);
 
 %% 5. Save the echo audios  'Echo_one.wav' and 'Echo_multiple.wav'
 
-
+if strcmp(filterName, 'low-pass') == 1
+    audiowrite('Echo_one.wav', oneEcho, fs);
+    audiowrite('Echo_multiple.wav', multiEcho, fs);
+end
 

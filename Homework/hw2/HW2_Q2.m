@@ -17,6 +17,8 @@ LineWidth = 1.5;
 % Great for bit reduction
 [input, fs] = audioread('Tempest.wav');
 
+% Plot in full screen
+figure('units','normalized','outerposition',[0 0 1 1]);
 
 %%% Plot the spectrum of input audio
 subplot(4,2,1);
@@ -69,11 +71,29 @@ ylim([0 10^5]);
 
 %% 4. First-order feedback loop for Noise shaping
 % (Hint) Check the signal value. How do I quantize the dithered signal? maybe scale up first?
+[row, col] = size(input8bits_dither);
+shapingOutput = input8bits_dither;
+c = 0.7;
+
+for C = 1: col
+    for R = 1: row
+        if (R-1 >= 1)
+            shapingOutput(R, C) = shapingOutput(R, C)+ c*(input8bits_nor(R-1,C)-shapingOutput(R-1,C));
+        end
+    end
+end
+
+% sound(shapingOutput, fs_nor);
 
 
-
-%%% Plot the spectrum of noise shaping
-
+%% Plot the spectrum of noise shaping
+subplot(4,2,6);
+[freq_shaping, mang_shaping] = makeSpectrum(shapingOutput, fs);
+plot(freq_shaping, mang_shaping, 'LineWidth', LineWidth); 
+title('Spectrum of Noise Shaping', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize);
+xlim([50 2000]);
+ylim([0 10^5]);
 
 
 %% 5. Implement Low-pass filter
@@ -102,17 +122,30 @@ end
 
 %% 7. Normalization
 
+desireMax = .5;
+for C = 1: col
+   ampM = max(limitingOutput(:,C));
+   normalizeOutput(:,C) = limitingOutput(:,C)*(desireMax/ampM);
+end
 
-
+% sound(normalizeOutput, fs);
 
 %% 6. Save audio (audiowrite) Tempest_Recover.wav
-
-
+audiowrite('Tempest_Recover.wav', normalizeOutput, fs);
 
 %%% Plot the spectrum of output audio
-
+subplot(4,2,7);
+[normalizeFreq, normalizeMag] = makeSpectrum(normalizeOutput, fs);
+plot(normalizeFreq, normalizeMag, 'LineWidth', LineWidth); 
+title('Spectrum of Output Audio', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize)
+% xlim([0 5000]);
 
 
 %%% Plot the shape of output audio
-
+subplot(4,2,8);
+plot(normalizeOutput, 'LineWidth', LineWidth); 
+title('Shape of Output Audio', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize)
+% xlim([0 5000]);
 
