@@ -35,9 +35,9 @@ xlim([0 1600]);
 % fcutoff: Cutoff frequency
 
 N = 1999;
-fcutoff1 = 800;
+fcutoff1 = 350;
 fcutoff2 = 0;
-filterName = 'high-pass';
+filterName = 'low-pass';
 [outputSignal, outputFilter] = myFilter(y_input, fs, N, 'Blackman', filterName, fcutoff1, fcutoff2);
 
 % gong = audioplayer(outputSignal, fs);
