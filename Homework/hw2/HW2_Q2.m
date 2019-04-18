@@ -2,7 +2,9 @@
 %%% Follow the instructions (hints) and you can finish the homework
 
 %% Clean variables and screen
-clear all;close all;clc;
+clear all;
+close all;
+clc;
 
 %% Visualization parameters (Change it if you want)
 % Some Tips:
@@ -20,21 +22,20 @@ LineWidth = 1.5;
 % Plot in full screen
 figure('units','normalized','outerposition',[0 0 1 1]);
 
-%%% Plot the spectrum of input audio
-subplot(4,2,1);
-[frequency, magnitude] = makeSpectrum(input, fs);
-plot(frequency, magnitude, 'LineWidth', LineWidth); 
-title('Spectrum of Input Audio', 'fontsize', titlefont);
-set(gca, 'fontsize', fontsize)
-xlim([0 5000]);
-
 %%% Plot the shape of input audio
-subplot(4,2,2);
+subplot(4,2,1);
 plot(input, 'LineWidth', LineWidth); 
 title('Shape of Input Audio', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
 % xlim([100 1600]);
 
+%%% Plot the spectrum of input audio
+subplot(4,2,2);
+[frequency, magnitude] = makeSpectrum(input, fs);
+plot(frequency, magnitude, 'LineWidth', LineWidth); 
+title('Spectrum of Input Audio', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize)
+% xlim([0 5000]);
 
 %% 2. Bit reduction
 % (Hint) The input audio signal is double (-1 ~ 1)
@@ -44,28 +45,36 @@ input8bits = uint8( (input + 1)/2 * 255 );
 % (Hint) remember to save the file with sampling rate = 8
 audiowrite('Tempest_8bit.wav', input8bits, fs, 'BitsPerSample', 8);
 
-%%% Plot the spectrum of the Bit reduction
-subplot(4,2,3);
+%%% Plot the shape of the Bit reduction
+subplot(4,3,1);
 [freq_8bit, mang_8bit] = makeSpectrum(input8bits, fs);
 plot(freq_8bit, mang_8bit, 'LineWidth', LineWidth); 
-title('Spectrum of Bit Reduction', 'fontsize', titlefont);
+title('Shape of Bit Reduction', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-xlim([50 2000]);
-ylim([0 10^5]);
+% xlim([50 2000]);
+% ylim([0 10^5]);
 
 %% 3. Audio dithering
 % (Hint) add random noise
 [input8bits_nor, fs_nor] = audioread('Tempest_8bit.wav');
 input8bits_dither = input8bits_nor + rand(size(input8bits_nor))/5;
 
+%%% Plot the shape of the dithered result
+subplot(4,2,3);
+plot(input8bits_dither, 'LineWidth', LineWidth); 
+title('Shape of Dithered Result', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize);
+% xlim([50 2000]);
+% ylim([0 10^5]);
+
 %%% Plot the spectrum of the dithered result
 subplot(4,2,4);
-[freq_dither, mang_dither] = makeSpectrum(input8bits_dither, fs);
+[freq_dither, mang_dither] = makeSpectrum(input8bits_dither, fs_nor);
 plot(freq_dither, mang_dither, 'LineWidth', LineWidth); 
 title('Spectrum of Dithered Result', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-xlim([50 2000]);
-ylim([0 10^5]);
+% xlim([50 2000]);
+% ylim([0 10^5]);
 
 % sound(input8bits_dither, fs_nor);
 
@@ -85,15 +94,22 @@ end
 
 % sound(shapingOutput, fs_nor);
 
+%%% Plot the shape of noise shapping
+subplot(4,2,5);
+plot(shapingOutput, 'LineWidth', LineWidth); 
+title('Spectrum of Noise Shaping', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize);
+% xlim([50 2000]);
+% ylim([0 10^5]);
 
-%% Plot the spectrum of noise shaping
+%%% Plot the spectrum of noise shaping
 subplot(4,2,6);
-[freq_shaping, mang_shaping] = makeSpectrum(shapingOutput, fs);
+[freq_shaping, mang_shaping] = makeSpectrum(shapingOutput, fs_nor);
 plot(freq_shaping, mang_shaping, 'LineWidth', LineWidth); 
 title('Spectrum of Noise Shaping', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-xlim([50 2000]);
-ylim([0 10^5]);
+% xlim([50 2000]);
+% ylim([0 10^5]);
 
 
 %% 5. Implement Low-pass filter
@@ -133,8 +149,15 @@ end
 %% 6. Save audio (audiowrite) Tempest_Recover.wav
 audiowrite('Tempest_Recover.wav', normalizeOutput, fs);
 
-%%% Plot the spectrum of output audio
+%%% Plot the shape of output audio
 subplot(4,2,7);
+plot(normalizeOutput, 'LineWidth', LineWidth); 
+title('Shape of Output Audio', 'fontsize', titlefont);
+set(gca, 'fontsize', fontsize)
+% xlim([0 5000]);
+
+%%% Plot the spectrum of output audio
+subplot(4,2,8);
 [normalizeFreq, normalizeMag] = makeSpectrum(normalizeOutput, fs);
 plot(normalizeFreq, normalizeMag, 'LineWidth', LineWidth); 
 title('Spectrum of Output Audio', 'fontsize', titlefont);
@@ -142,10 +165,5 @@ set(gca, 'fontsize', fontsize)
 % xlim([0 5000]);
 
 
-%%% Plot the shape of output audio
-subplot(4,2,8);
-plot(normalizeOutput, 'LineWidth', LineWidth); 
-title('Shape of Output Audio', 'fontsize', titlefont);
-set(gca, 'fontsize', fontsize)
-% xlim([0 5000]);
+
 
