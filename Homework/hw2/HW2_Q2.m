@@ -28,6 +28,7 @@ plot(input, 'LineWidth', LineWidth);
 title('Shape of Input Audio', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
 % xlim([100 1600]);
+ylim([-1 2]);
 
 %%% Plot the spectrum of input audio
 subplot(4,2,2);
@@ -35,7 +36,7 @@ subplot(4,2,2);
 plot(frequency, magnitude, 'LineWidth', LineWidth); 
 title('Spectrum of Input Audio', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-% xlim([0 5000]);
+xlim([50 5000]);
 
 %% 2. Bit reduction
 % (Hint) The input audio signal is double (-1 ~ 1)
@@ -46,26 +47,26 @@ input8bits = uint8( (input + 1)/2 * 255 );
 audiowrite('Tempest_8bit.wav', input8bits, fs, 'BitsPerSample', 8);
 
 %%% Plot the shape of the Bit reduction
-subplot(4,3,1);
-[freq_8bit, mang_8bit] = makeSpectrum(input8bits, fs);
-plot(freq_8bit, mang_8bit, 'LineWidth', LineWidth); 
-title('Shape of Bit Reduction', 'fontsize', titlefont);
-set(gca, 'fontsize', fontsize);
+% subplot(4,3,1);
+% [freq_8bit, mang_8bit] = makeSpectrum(input8bits, fs);
+% plot(freq_8bit, mang_8bit, 'LineWidth', LineWidth); 
+% title('Shape of Bit Reduction', 'fontsize', titlefont);
+% set(gca, 'fontsize', fontsize);
 % xlim([50 2000]);
 % ylim([0 10^5]);
 
 %% 3. Audio dithering
 % (Hint) add random noise
 [input8bits_nor, fs_nor] = audioread('Tempest_8bit.wav');
-input8bits_dither = input8bits_nor + rand(size(input8bits_nor))/5;
+input8bits_dither = input8bits_nor + rand(size(input8bits_nor))/2;
 
 %%% Plot the shape of the dithered result
 subplot(4,2,3);
 plot(input8bits_dither, 'LineWidth', LineWidth); 
 title('Shape of Dithered Result', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-% xlim([50 2000]);
-% ylim([0 10^5]);
+xlim([0 inf]);
+ylim([-1 2]);
 
 %%% Plot the spectrum of the dithered result
 subplot(4,2,4);
@@ -73,7 +74,7 @@ subplot(4,2,4);
 plot(freq_dither, mang_dither, 'LineWidth', LineWidth); 
 title('Spectrum of Dithered Result', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-% xlim([50 2000]);
+xlim([50 4000]);
 % ylim([0 10^5]);
 
 % sound(input8bits_dither, fs_nor);
@@ -97,10 +98,10 @@ end
 %%% Plot the shape of noise shapping
 subplot(4,2,5);
 plot(shapingOutput, 'LineWidth', LineWidth); 
-title('Spectrum of Noise Shaping', 'fontsize', titlefont);
+title('Shape of Noise Shaping', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-% xlim([50 2000]);
-% ylim([0 10^5]);
+xlim([0 inf]);
+ylim([-1 2]);
 
 %%% Plot the spectrum of noise shaping
 subplot(4,2,6);
@@ -108,26 +109,26 @@ subplot(4,2,6);
 plot(freq_shaping, mang_shaping, 'LineWidth', LineWidth); 
 title('Spectrum of Noise Shaping', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-% xlim([50 2000]);
+xlim([50 4000]);
 % ylim([0 10^5]);
 
 
 %% 5. Implement Low-pass filter
 N = 1999;
-fcutoff1 = 600;
+fcutoff1 = 1500;
 fcutoff2 = 0;
 filterName = 'low-pass';
-[lowpassOutput, outputFilter] = myFilter(input8bits_dither, fs, N, 'Blackman', filterName, fcutoff1, fcutoff2);
+[lowpassOutput, outputFilter] = myFilter(shapingOutput, fs_nor, N, 'Blackman', filterName, fcutoff1, fcutoff2);
 
-% sound(lowpassOutput, fs);
+% sound(lowpassOutput, fs_nor);
 
-%% 6. Audio limiting(hard)
+%% 6. Audio limiting(hard clipping)
 limitingOutput = lowpassOutput;
 [row, col] = size(lowpassOutput);
 for R = 1: row
     for C = 1:col
-        if limitingOutput(R, C) >= 0.05
-            limitingOutput(R, C) = 0.05;
+        if limitingOutput(R, C) >= 0.06
+            limitingOutput(R, C) = 0.06;
         elseif limitingOutput(R, C) < 0
             limitingOutput(R, C) = 0;
         end
@@ -162,8 +163,4 @@ subplot(4,2,8);
 plot(normalizeFreq, normalizeMag, 'LineWidth', LineWidth); 
 title('Spectrum of Output Audio', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-% xlim([0 5000]);
-
-
-
-
+xlim([50 4000]);
