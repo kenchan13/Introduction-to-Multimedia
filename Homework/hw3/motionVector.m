@@ -28,34 +28,34 @@ min = 10000000;
 % start
 count = 1;
 for i=1 : block_height
-    for j=1 : block_width % for every block in target frame
+    for j=1 : block_width % for every block in reference frame
         y_start = (i-1)*block_size+1;
         y_end = i*block_size;
         x_start = (j-1)*block_size+1;
         x_end = j*block_size;
-
-        block_target = target_frame(y_start : y_end, x_start : x_end);
-        % middle point of block_target
-        target_px = (j-0.5)*block_size+1; 
-        target_py = (i-0.5)*block_size+1;
+        
+        % target point of block_reference
+        block_reference = reference_frame(y_start : y_end, x_start : x_end);
+        reference_px = x_start; 
+        reference_py = y_start;
         
         for ii=y_start-range : y_start+range
             for jj=x_start-range : x_start+range
                 if (ii>=1) && (ii<=(frame_height+1-block_size)) && (jj>=1) && (jj<=frame_width+1-block_size)
-                    % search range in reference_frame
-                    block_reference = reference_frame(ii:ii+block_size-1, jj:jj+block_size-1); 
-                    temp = sum(sum(abs(block_reference-block_target)));
+                    % search range in target_frame
+                    block_target = target_frame(ii:ii+block_size-1, jj:jj+block_size-1); 
+                    temp = sum(sum(abs(block_target-block_reference)));
                     if min > temp
                         min = temp;
-                        block_min = block_reference;
-                        reference_px = jj + block_size*0.5;
-                        reference_py = ii + block_size*0.5;
+                        block_min = block_target;
+                        target_px = jj;
+                        target_py = ii;
                     end
                 end
             end
         end
         est_frame(y_start : y_end, x_start : x_end)=block_min;
-        motion_estimation(count,:) = [target_px, target_py, reference_px-target_px, reference_py-target_py];
+        motion_estimation(count,:) = [reference_px, reference_py, target_px-reference_px, target_py-reference_py];
         count = count + 1;
         min=10000000;
     end
