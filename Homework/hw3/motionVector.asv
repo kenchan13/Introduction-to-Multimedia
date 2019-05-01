@@ -35,15 +35,13 @@ for i=1 : block_height
         x_end = j*block_size;
 
         block_target = target_frame(y_start : y_end, x_start : x_end);
-        % middle point of block_target
-        target_px = (j-0.5)*block_size+1; 
+        target_px = (j-0.5)*block_size+1; % middle point of block_target
         target_py = (i-0.5)*block_size+1;
         
         for ii=y_start-range : y_start+range
             for jj=x_start-range : x_start+range
                 if (ii>=1) && (ii<=(frame_height+1-block_size)) && (jj>=1) && (jj<=frame_width+1-block_size)
-                    % search range in reference_frame
-                    block_reference = reference_frame(ii:ii+block_size-1, jj:jj+block_size-1); 
+                    block_reference = reference_frame(ii:ii+block_size-1, jj:jj+block_size-1); % search range in reference_frame
                     temp = sum(sum(abs(block_reference-block_target)));
                     if min > temp
                         min = temp;

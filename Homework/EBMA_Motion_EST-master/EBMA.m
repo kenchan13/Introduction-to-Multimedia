@@ -41,7 +41,7 @@ min = 10000000;
 % start
 count = 1;
 for i=1:block_height
-    for j=1:block_width
+    for j=1:block_width % for every block in anchor frame
         block_anchor = anchor_frame((i-1)*block_y+1:i*block_y,(j-1)*block_x+1:j*block_x);
         anchor_px = (j-0.5)*block_x+1;
         anchor_py = (i-0.5)*block_y+1;
@@ -49,7 +49,7 @@ for i=1:block_height
         for ii=(i-1)*block_y+1-R_y:(i-1)*block_y+1+R_y
             for jj=(j-1)*block_x+1-R_x:(j-1)*block_x+1+R_x
                 if (ii>=1) && (ii<=(frame_height+1-block_y)) && (jj>=1) && (jj<=frame_width+1-block_x)
-                    block_target = target_frame(ii:ii+block_y-1,jj:jj+block_x-1);
+                    block_target = target_frame(ii:ii+block_y-1,jj:jj+block_x-1); % search range in target_frame
                     temp = sum(sum(abs(block_target-block_anchor)));
                     if min > temp
                         min = temp;
@@ -77,7 +77,7 @@ imshow(est_frame);
 title('Estimation Frame');
 subplot(2,2,4);
 hold on;
-imshow(target_frame);
+% imshow(target_frame);
 hold off;
 hold on;
 quiver(motion_estimation(:,1),motion_estimation(:,2),motion_estimation(:,3),motion_estimation(:,4));
