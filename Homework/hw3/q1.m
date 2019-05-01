@@ -39,44 +39,32 @@ for i = 1: blockHeight-1
         targetImgPart = targetBlock{i,j};
         
         [h w l] = size(refImgPart);
-        fprintf("h=%d w=%d\n", h, w);
+        % fprintf("h=%d w=%d\n", h, w);
         
+%         refImgLabel = insertShape(refImg, 'Rectangle', [(w1-1)*p (h1-1)*p (w2-w1+1)*p+2 (h2-h1+1)*p+2], 'LineWidth',1);
+%         refImgLabel2 = insertShape(refImgLabel, 'Rectangle', [(j-1)*p (i-1)*p p+2 p+2], 'LineWidth',1, 'Color','blue');
+%         subplot(2,2,1), imshow(refImgLabel2);
+%         subplot(2,2,2), imshow(refImgPart);
+%            
+%         targetImgLabel = insertShape(targetImg, 'Rectangle', [(j-1)*p (i-1)*p p+2 p+2], 'LineWidth',1);
+%         subplot(2,2,3), imshow(targetImgLabel);
+%         subplot(2,2,4), imshow(targetImgPart);
         
-        subplot(2,1,1), imshow(refImgPart);
-        refImgLabel = insertShape(refImg, 'Rectangle', [(w1-1)*p (h1-1)*p (w2-w1+1)*p+2 (h2-h1+1)*p+2], 'LineWidth',1);
-        refImgLabel2 = insertShape(refImgLabel, 'Rectangle', [(j-1)*p (i-1)*p p+2 p+2], 'LineWidth',1, 'Color','blue');
-        subplot(2,1,2), imshow(refImgLabel2);
-        pause(.0001);
-%         w = waitforbuttonpress;
+        % w = waitforbuttonpress;
+%         pause(.0001);
         
-        %{
-        flag = 0;
-        [refImgPart_H, regImgPart_W, layer] = size(refImgPart);
-        for x = 1: refImgPart_H-p
-            for y = 1: regImgPart_W-p
-                temp = refImgPart(x:x+p-1, y:y+p-1, 1:3) - targetImgPart;
-                
-                imshow(targetImgPart);
-                pause(5);
-                if temp == zeros(8,8,3)
-                    fprintf("target: (%d,%d)  refPos: (%d,%d) Great!\n", i,j,x,y);
-                    flag = 1;
-                    % [x y width height]
-%                     refImgLabel = insertShape(refImgPart, 'Rectangle', [x-1 y-1 p+1 p+1], 'LineWidth',1);
-%                     subplot(1,2,1), imshow(refImgLabel);
-%                     subplot(1,2,2), imshow(targetImgPart)
-                    
-                    pause(5);
-                    break;
-                end
-            end
-            
-            if flag == 1
-                break
+        % Comparing targetImg and refImg within search range(refImgPart)
+        for x = 1: h-p+1
+%             pause(.1);
+            for y = 1: w-p+1
+                if matrixSame(refImgPart(x:x+p-1, y:y+p-1, :), targetImgPart) == 1, fprintf("haha"), end
+%                 subplot(1,2,1), imshow(refImgPart(x:x+p-1, y:y+p-1, :));
+%                 subplot(1,2,2), imshow(targetImgPart);
+%                 pause(.0001);
             end
         end
-        %}
-        
+
+
     end
 end
 
