@@ -1,10 +1,9 @@
-clear all;
-clc;
+function [totalSAD, est_frame, motion_estimation] = threeStep(reference_frame, target_frame, block_size, range)
 
-reference_frame_Addr = './data/frame437.jpg';
-reference_frame = imread(reference_frame_Addr);
-target_frame_Addr = './data/frame439.jpg';
-target_frame = imread(target_frame_Addr);
+% reference_frame_Addr = './data/frame437.jpg';
+% reference_frame = imread(reference_frame_Addr);
+% target_frame_Addr = './data/frame439.jpg';
+% target_frame = imread(target_frame_Addr);
 reference_frame = im2double(rgb2gray(reference_frame));
 target_frame = im2double(rgb2gray(target_frame));
 
@@ -12,8 +11,8 @@ est_frame = zeros(size(target_frame));
 
 [frame_height, frame_width, frame_layer] = size(reference_frame);
 
-block_size = 8;
-range = 8;
+% block_size = 8;
+% range = 8;
 
 block_width = frame_width/block_size;
 block_height = frame_height/block_size;
@@ -21,7 +20,10 @@ block_height = frame_height/block_size;
 block_target = zeros(block_size, block_size);
 block_reference = zeros(block_size, block_size);
 
-% record the motions 
+% record totalSAD
+totalSAD = 0;
+
+% record the motions
 motion_estimation = zeros(block_height*block_width, 4);
 min = 10000000;
 
@@ -58,12 +60,12 @@ for i=1 : block_height
                     end
                 end
             end
-            
             center_px = block_min_px;
             center_py = block_min_py;
             min=10000000;
         end
-
+        
+        totalSAD = totalSAD + temp;
         est_frame(y_start : y_end, x_start : x_end)=block_min;
         motion_estimation(count,:) = [block_min_px, block_min_py, target_px-block_min_px, target_py-block_min_py];
         count = count + 1;
@@ -71,20 +73,20 @@ for i=1 : block_height
     end
 end
 
-subplot(2, 2, 1);
-imshow(reference_frame);
-title('Anchor Frame');
-subplot(2, 2, 2);
-imshow(target_frame);
-title('Target Frame');
-subplot(2, 2, 3);
-imshow(est_frame);
-title('Estimation Frame');
-subplot(2, 2, 4);
-hold on;
-imshow(target_frame);
-hold off;
-hold on;
-quiver(motion_estimation(:, 1), motion_estimation(:, 2), motion_estimation(:, 3), motion_estimation(:, 4));
-hold off;
-title('Motion Estimation');
+% subplot(2, 2, 1);
+% imshow(reference_frame);
+% title('Anchor Frame');
+% subplot(2, 2, 2);
+% imshow(target_frame);
+% title('Target Frame');
+% subplot(2, 2, 3);
+% imshow(est_frame);
+% title('Estimation Frame');
+% subplot(2, 2, 4);
+% hold on;
+% imshow(target_frame);
+% hold off;
+% hold on;
+% quiver(motion_estimation(:, 1), motion_estimation(:, 2), motion_estimation(:, 3), motion_estimation(:, 4));
+% hold off;
+% title('Motion Estimation');
