@@ -55,7 +55,7 @@ for i=1 : block_height
         
         totalSAD = totalSAD + temp;
         est_frame(y_start : y_end, x_start : x_end, :)=block_min;
-        motion_estimation(count,:) = [reference_px, reference_py, target_px-reference_px, target_py-reference_py];
+        motion_estimation(count,:) = [target_px, target_py, reference_px-target_px, reference_py-target_py];
         count = count + 1;
         min=10000000;
     end
