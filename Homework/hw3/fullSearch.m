@@ -1,7 +1,7 @@
 function [totalSAD, est_frame, motion_estimation] = fullSearch(reference_frame, target_frame, block_size, range)
 
-reference_frame = im2double(rgb2gray(reference_frame));
-target_frame = im2double(rgb2gray(target_frame));
+reference_frame = rgb2gray(reference_frame);
+target_frame = rgb2gray(target_frame);
 
 est_frame = zeros(size(target_frame));
 
