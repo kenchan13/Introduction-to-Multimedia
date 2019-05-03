@@ -1,7 +1,7 @@
 function [totalSAD, est_frame, motion_estimation] = fullSearch(reference_frame, target_frame, block_size, range)
 
-reference_frame = rgb2gray(reference_frame);
-target_frame = rgb2gray(target_frame);
+% reference_frame = rgb2gray(reference_frame);
+% target_frame = rgb2gray(target_frame);
 
 est_frame = zeros(size(target_frame));
 
@@ -9,6 +9,7 @@ est_frame = zeros(size(target_frame));
 
 block_width = frame_width/block_size;
 block_height = frame_height/block_size;
+block_layer = frame_layer;
 
 block_target = zeros(block_size, block_size);
 block_reference = zeros(block_size, block_size);
@@ -29,7 +30,7 @@ for i=1 : block_height
         x_end = j*block_size;
         
         % reference point of block_target
-        block_target = target_frame(y_start : y_end, x_start : x_end);
+        block_target = target_frame(y_start : y_end, x_start : x_end, :);
         target_px = x_start; 
         target_py = y_start;
         
@@ -37,8 +38,11 @@ for i=1 : block_height
             for jj=x_start-range : x_start+range
                 if (ii>=1) && (ii<=(frame_height+1-block_size)) && (jj>=1) && (jj<=frame_width+1-block_size)
                     % search range in reference_frame
-                    block_reference = reference_frame(ii:ii+block_size-1, jj:jj+block_size-1); 
-                    temp = sum(sum(abs(block_reference-block_target)));
+                    temp = 0;
+                    for kk=1:block_layer
+                        block_reference(:,:,kk) = reference_frame(ii:ii+block_size-1, jj:jj+block_size-1, kk); 
+                        temp = sum(sum(abs(block_reference(:,:,kk)-block_target(:,:,kk)))) + temp;
+                    end
                     if min > temp
                         min = temp;
                         block_min = block_reference;
@@ -50,7 +54,7 @@ for i=1 : block_height
         end
         
         totalSAD = totalSAD + temp;
-        est_frame(y_start : y_end, x_start : x_end)=block_min;
+        est_frame(y_start : y_end, x_start : x_end, :)=block_min;
         motion_estimation(count,:) = [reference_px, reference_py, target_px-reference_px, target_py-reference_py];
         count = count + 1;
         min=10000000;

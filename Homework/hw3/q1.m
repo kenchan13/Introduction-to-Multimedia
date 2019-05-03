@@ -6,13 +6,13 @@ reference_frame = im2double(imread(reference_frame_addr));
 target_frame_addr = './data/frame439.jpg';
 target_frame = im2double(imread(target_frame_addr));
 
-tic;
-[totalSAD, est_frame, motion_estimation] = threeStep(reference_frame, target_frame, 8, 8);
-time_full = toc
-
 % tic;
-% [totalSAD, est_frame, motion_estimation] = fullSearch(reference_frame, target_frame, 8, 8);
+% [totalSAD, est_frame, motion_estimation] = threeStep(reference_frame, target_frame, 8, 8);
 % time_full = toc
+
+tic;
+[totalSAD, est_frame, motion_estimation] = fullSearch(reference_frame, target_frame, 8, 8);
+time_full = toc
 
 % errorFrame = imabsdiff(reference_frame,  est_frame);
 % PSNR_Full = 10*log10(255*255/mean(mean((errorFrame.^2))))
