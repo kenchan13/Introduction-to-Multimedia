@@ -19,7 +19,7 @@ totalSAD = 0;
 
 % record the motions 
 motion_estimation = zeros(block_height*block_width, 4);
-min = 10000000;
+min = 9999;
 
 count = 1;
 for i=1 : block_height
@@ -57,6 +57,6 @@ for i=1 : block_height
         est_frame(y_start : y_end, x_start : x_end, :)=block_min;
         motion_estimation(count,:) = [target_px, target_py, reference_px-target_px, reference_py-target_py];
         count = count + 1;
-        min=10000000;
+        min=9999;
     end
 end
