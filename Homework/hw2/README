@@ -1,0 +1,27 @@
+1. 如何執行你的程式，以及執行完會出現哪些結果(檔案、圖)
+In HW2_Q1.m and HW2_Q2.m, press F5 in MATLAB to run.
+Output Audio and Image will be generate automatically
+after changing the parameter.
+
+In HW2_Q1:
+Modify N, cutoff frequency and filterNmae in line 37-40.
+
+In HW2_Q2:
+Modify c in line 86
+Modify N, cutoff frequency and filterNmae in line 117-120.
+
+2. 各程式的目的和輸出的檔案
+HW2_Q1, HW2_Q2: 
+Main body for each question
+
+myFilter:
+Implement low-pass, high-pass and bandpass filter.
+
+conv_imple:
+Implement convolution for Q1 & Q2.
+
+makeSpectrum:
+Provided by TA, change data from time domain to frequeny doamin.
+
+Output Files:
+Audio for output result.

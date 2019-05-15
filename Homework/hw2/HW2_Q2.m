@@ -36,7 +36,7 @@ subplot(4,2,2);
 plot(frequency, magnitude, 'LineWidth', LineWidth); 
 title('Spectrum of Input Audio', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([50 5000]);
+xlim([50 inf]);
 
 %% 2. Bit reduction
 % (Hint) The input audio signal is double (-1 ~ 1)
@@ -74,7 +74,7 @@ subplot(4,2,4);
 plot(freq_dither, mang_dither, 'LineWidth', LineWidth); 
 title('Spectrum of Dithered Result', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-xlim([50 4000]);
+xlim([50 inf]);
 % ylim([0 10^5]);
 
 % sound(input8bits_dither, fs_nor);
@@ -109,7 +109,7 @@ subplot(4,2,6);
 plot(freq_shaping, mang_shaping, 'LineWidth', LineWidth); 
 title('Spectrum of Noise Shaping', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize);
-xlim([50 4000]);
+xlim([50 inf]);
 % ylim([0 10^5]);
 
 
@@ -120,26 +120,26 @@ fcutoff2 = 0;
 filterName = 'low-pass';
 [lowpassOutput, outputFilter] = myFilter(shapingOutput, fs_nor, N, 'Blackman', filterName, fcutoff1, fcutoff2);
 
-% sound(lowpassOutput, fs_nor);
+%sound(lowpassOutput, fs_nor);
 
 %% 6. Audio limiting(hard clipping)
 limitingOutput = lowpassOutput;
 [row, col] = size(lowpassOutput);
 for R = 1: row
     for C = 1:col
-        if limitingOutput(R, C) >= 0.06
-            limitingOutput(R, C) = 0.06;
-        elseif limitingOutput(R, C) < 0
-            limitingOutput(R, C) = 0;
+        if limitingOutput(R, C) >= 0.7
+            limitingOutput(R, C) = 0.7;
+        elseif limitingOutput(R, C) < -0.7
+            limitingOutput(R, C) = -0.7;
         end
     end
 end
 
-% sound(limitingOutput, fs);
+ %sound(limitingOutput, fs);
 
 %% 7. Normalization
 
-desireMax = .5;
+desireMax = .4;
 for C = 1: col
    ampM = max(limitingOutput(:,C));
    normalizeOutput(:,C) = limitingOutput(:,C)*(desireMax/ampM);
@@ -163,4 +163,4 @@ subplot(4,2,8);
 plot(normalizeFreq, normalizeMag, 'LineWidth', LineWidth); 
 title('Spectrum of Output Audio', 'fontsize', titlefont);
 set(gca, 'fontsize', fontsize)
-xlim([50 4000]);
+xlim([50 inf]);

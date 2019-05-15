@@ -59,7 +59,7 @@ hold on
 plot(points(:, 1), points(:, 2), 'r.');
 plot(result2(:, 1), result2(:, 2), 'g-');
 saveas(f, '1a.png');
-close all
+% close all
 
 %% Scaling
 points = points .* 4;
