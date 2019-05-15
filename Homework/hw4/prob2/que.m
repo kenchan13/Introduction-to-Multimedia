@@ -74,5 +74,67 @@ hold on
 surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
 axis equal
 light('Position',[0 0 1], 'Style', 'local');
+saveas(f, '2c.png');
 
+
+%% d.
+close all
+f = figure
+subplot(2,2,1);
+p = trisurf(obj.f.v, obj.v(:,1), obj.v(:,2), obj.v(:,3), ...
+    'FaceVertexCData', tval, 'FaceColor', 'interp', 'EdgeAlpha', 0);
+p.AmbientStrength = 1.0;
+p.DiffuseStrength = 0.0;
+p.SpecularStrength = 0.0;
+hold on
+p = surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
+p.AmbientStrength = 1.0;
+p.DiffuseStrength = 0.0;
+p.SpecularStrength = 0.0;
+axis equal
+light('Position',[0 0 1], 'Style', 'infinite');
+
+
+subplot(2,2,2);
+p = trisurf(obj.f.v, obj.v(:,1), obj.v(:,2), obj.v(:,3), ...
+    'FaceVertexCData', tval, 'FaceColor', 'interp', 'EdgeAlpha', 0);
+p.AmbientStrength = 0.1;
+p.DiffuseStrength = 1.0;
+p.SpecularStrength = 0.0;
+hold on
+p = surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
+p.AmbientStrength = 0.1;
+p.DiffuseStrength = 1.0;
+p.SpecularStrength = 0.0;
+axis equal
+light('Position',[0 0 1], 'Style', 'infinite');
+
+subplot(2,2,3);
+p = trisurf(obj.f.v, obj.v(:,1), obj.v(:,2), obj.v(:,3), ...
+    'FaceVertexCData', tval, 'FaceColor', 'interp', 'EdgeAlpha', 0);
+p.AmbientStrength = 0.1;
+p.DiffuseStrength = 0.1;
+p.SpecularStrength = 0.0;
+hold on
+p = surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
+p.AmbientStrength = 0.1;
+p.DiffuseStrength = 0.1;
+p.SpecularStrength = 0.0;
+axis equal
+light('Position',[0 0 1], 'Style', 'infinite');
+
+subplot(2,2,4);
+p = trisurf(obj.f.v, obj.v(:,1), obj.v(:,2), obj.v(:,3), ...
+    'FaceVertexCData', tval, 'FaceColor', 'interp', 'EdgeAlpha', 0);
+p.AmbientStrength = 0.1;
+p.DiffuseStrength = 0.5;
+p.SpecularStrength = 1.0;
+hold on
+p = surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
+p.AmbientStrength = 0.1;
+p.DiffuseStrength = 0.5;
+p.SpecularStrength = 1.0;
+axis equal
+light('Position',[0 0 1], 'Style', 'infinite');
+saveas(f, '2d.png');
 %==============================================================%
