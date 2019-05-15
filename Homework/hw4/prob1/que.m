@@ -59,10 +59,18 @@ hold on
 plot(points(:, 1), points(:, 2), 'r.');
 plot(result2(:, 1), result2(:, 2), 'g-');
 saveas(f, '1a.png');
+close all
 
 %% Scaling
 points = points .* 4;
 
 %==============================================================%
 % Code here.
+imgResize = imresize(img, 4, 'nearest');
+subplot(1, 1, 1);
+imshow(img);
+hold on
+plot(points(:, 1), points(:, 2), 'r.');
+plot(result1(:, 1), result1(:, 2), 'g-');
+
 %==============================================================%
