@@ -67,10 +67,12 @@ points = points .* 4;
 %==============================================================%
 % Code here.
 imgResize = imresize(img, 4, 'nearest');
+
+f = figure;
 subplot(1, 1, 1);
 imshow(img);
 hold on
 plot(points(:, 1), points(:, 2), 'r.');
 plot(result1(:, 1), result1(:, 2), 'g-');
-
+saveas(f, '1b.png');
 %==============================================================%
