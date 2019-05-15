@@ -55,4 +55,24 @@ surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
 axis equal
 
 saveas(f, '2b.png');
+
+%% c.
+close all;
+f = figure;
+subplot(1,2,1);
+trisurf(obj.f.v, obj.v(:,1), obj.v(:,2), obj.v(:,3), ...
+    'FaceVertexCData', tval, 'FaceColor', 'interp', 'EdgeAlpha', 0);
+hold on
+surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
+axis equal
+light('Position',[0 0 1], 'Style', 'infinite');
+
+subplot(1,2,2);
+trisurf(obj.f.v, obj.v(:,1), obj.v(:,2), obj.v(:,3), ...
+    'FaceVertexCData', tval, 'FaceColor', 'interp', 'EdgeAlpha', 0);
+hold on
+surf(X, Y, Z, C, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
+axis equal
+light('Position',[0 0 1], 'Style', 'local');
+
 %==============================================================%
